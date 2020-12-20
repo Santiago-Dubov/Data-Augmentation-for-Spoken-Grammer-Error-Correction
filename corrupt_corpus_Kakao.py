@@ -47,6 +47,9 @@ def change_type(word, tag, change_prob):
     return word
 
 def apply_perturbation(words, word2ptbs, word_change_prob, type_change_prob):
+    '''For every word in a sentence, if word is in the error dictionary there is a 0.9 prob of being replaced with a random word from its confusion set
+    For words not in error dictionary, 0.1 probability of type error
+    '''
     word_tags = pos_tag(words)
 
     sent = []
@@ -73,10 +76,10 @@ def corrupt_corpus(input, output):
             words = line.strip().split()
             perturbation = line.strip()
             i = 0
-            while perturbation.split() == words and i <= 10:
+            while perturbation.split() == words and i <= 3:
                 # iterates until a perturbation is added
                 perturbation = apply_perturbation(words, ptbs, 0.9, 0.1)
-                i += 1
+                i += 1 # try a maximum of 3 times to create an error
             f.write(perturbation + "\n")
 
 
